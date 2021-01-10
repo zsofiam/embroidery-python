@@ -21,7 +21,7 @@ def draw_rectangle(width, height, border_color=1, fill_color=1, border_width=1):
 def draw_triangle(height, border_color=1, fill_color=1):
     if height < 1 or border_color not in [0,1,2] or fill_color not in [0,1,2]:
         raise ValueError("Error: Incorrect parameter given! Cannot draw triangle!")
-    width = height + 3
+    width = height * 2 - 1
     matrix = draw_base_matrix(width, height, 0)
     for row in range(height):
         for column in range(height-row-1, width-(height-row-1)):
@@ -32,8 +32,29 @@ def draw_triangle(height, border_color=1, fill_color=1):
     return matrix
 
 
-def draw_christmas_tree(blocks):
-    matrix = []
+def draw_christmas_tree(blocks, border_color=1, fill_color=1):
+    if blocks < 1 or border_color not in [0,1,2] or fill_color not in [0,1,2]:
+        raise ValueError("Error: Incorrect parameter given! Cannot draw Christmas tree!")
+    height = blocks * 3
+    width = blocks * 2 + 3
+    matrix = draw_base_matrix(width, height, 0)
+    start_place = blocks + 2
+    count = 3
+    for row in range(height):
+        if row % 3 == 0:
+            start_place -= 1
+            count -= 2
+        else:
+            count += 2
+        modify_start_place = row % 3
+        for i in range(count):
+            if i == 0 or i == count - 1:
+                matrix[row][start_place - modify_start_place + i] = border_color
+            else:
+                matrix[row][start_place - modify_start_place + i] = fill_color
+        if row == height - 1:
+            for i in range(width):
+                matrix[row][i] = border_color
     return matrix
 
 
@@ -52,9 +73,8 @@ def embroider(matrix, color_scheme):
 
 if __name__ == '__main__':
     color_scheme = {0: ' ', 1: '*', 2: '.'}
-    embroider([[0, 0, 0, 1, 0, 0, 0], [0, 0, 1, 2, 1, 0, 0], [0, 1, 2, 2, 2, 1, 0], [1, 1, 1, 1, 1, 1, 1]], color_scheme)
-    embroider(draw_rectangle(6, 6, 1, 2, 1), color_scheme)
-    embroider(draw_triangle(14, 1, 2), color_scheme)
-
-    # This should have the same output:
-    # embroider(draw_triangle(4, border_color=1, fill_color=2), color_scheme)
+    #embroider([[0, 0, 0, 1, 0, 0, 0], [0, 0, 1, 2, 1, 0, 0], [0, 1, 2, 2, 2, 1, 0], [1, 1, 1, 1, 1, 1, 1]], color_scheme)
+    #embroider(draw_triangle(4, border_color=1, fill_color=2), color_scheme)
+    #embroider(draw_rectangle(27, 6, 1, 2, 1), color_scheme)
+    embroider(draw_triangle(10, 1, 2), color_scheme)
+    embroider(draw_christmas_tree(8, 1, 2), color_scheme)

@@ -1,4 +1,6 @@
 def draw_rectangle(width, height, border_color=1, fill_color=1, border_width=1):
+    if width < 1 or height < 1 or border_color not in [0,1,2] or fill_color not in [0,1,2] or border_width > width or border_width > height:
+        raise ValueError("Error: Incorrect parameter given!")
     matrix = [[border_color for column in range(width)] for row in range(height)]
     for row in range(border_width, height - border_width):
         for column in range(border_width, width - border_width):
